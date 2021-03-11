@@ -13,19 +13,14 @@ def parse_file(_file):
     with open(_file, 'r', encoding=encoding) as infile:
         reader = csv.DictReader(infile, delimiter=' ', fieldnames=[
                                 'x-coordinate', 'y-coordinate', 'timestamp', 'buttonstatus', 'azimuth', 'altitude', 'pressure'])
-        signature_data = {'number_fo_points': None, 'real': [], 'fake': []}
+        signature_data = []
         first_row = True
-        real_counter = 20
         for row in reader:
             if first_row:
                 first_row = False
-                signature_data['number_fo_points'] = row['x-coordinate']
+                #signature_data['number_fo_points'] = row['x-coordinate']
             else:
-                if real_counter > 0:
-                    signature_data['real'].append(row)
-                    real_counter -= 1
-                else:
-                    signature_data['fake'].append(row)
+                signature_data.append(row)
     return signature_data
 
 
