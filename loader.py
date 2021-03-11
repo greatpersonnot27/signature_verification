@@ -101,13 +101,25 @@ def clean_signature_data(signature_data):
     # TODO remove same timestamps and zero pressure points
     return signature_data
 
+def get_user_signature_ids(filename):
+    id_checks = re.search(r"U([0-9]+)S([0-9]+)", filename)
+    if id_checks:
+        user_id = id_checks.group(1)
+        sign_id = id_checks.group(2)
+    return user_id, sign_id
+
 def main():
-    files = select_source()
+    #files = select_source()
+    data_folder = 'data_files'
     signatures = {}
-    for f in files:
-        single_signature_data = parse_file(f)
+    for f in os.listdir('data_files'):
+        single_signature_data = parse_file(os.path.join(data_folder, f))
         single_signature_data = clean_signature_data(single_signature_data)
-        signatures[os.path.basename(f)] = single_signature_data
+        user_id, sign_id = get_user_signature_ids(os.path.basename(f))
+        if signatures.get(user_id):
+            signatures[user_id].append([sign_id, single_signature_data])
+        else:
+            signatures[user_id] = [[sign_id, single_signature_data]]
     review_signatures(signatures)
 
 if __name__ == "__main__":
