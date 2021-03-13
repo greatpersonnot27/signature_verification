@@ -109,7 +109,6 @@ def get_user_signature_ids(filename):
     return user_id, sign_id
 
 def main():
-    #files = select_source()
     data_folder = 'data_files'
     signatures = {}
     for f in os.listdir('data_files'):
