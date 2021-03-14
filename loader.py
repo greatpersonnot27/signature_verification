@@ -7,7 +7,7 @@ import datetime
 import ast
 import easygui as gui
 
-
+from plotter import plot_signature
 def parse_file(_file):
     encoding = get_file_encoding(_file)
     with open(_file, 'r', encoding=encoding) as infile:
@@ -43,53 +43,58 @@ def select_source():
     return files
 
 def review_signatures(signature_data):
-    signature_keys = list(signature_data)
-
-    if len(signature_keys) == 0:
+    user_ids = list(signature_data)
+    user_ids = sorted(user_ids, key=lambda x: int(x))
+    if len(user_ids) == 0:
         gui.msgbox(msg="No Signatures to review!",
                     title="Notice")
         return
     option = None
     while True:
         choice_control = ["CONTROL: DONE!"]
-        choices = choice_control + signature_keys
-        option = gui.choicebox(msg="number of signatures: " + str(len(signature_data)),
-                                title="Signatures",
+        choices = choice_control + user_ids
+        option = gui.choicebox(msg="number of users: " + str(len(signature_data)),
+                                title="users",
                                 choices=choices)
         if option == None:
             continue
         if "CONTROL:" not in option:
-            review_single_signature(signature_data[option], str(option))
+            review_user_signatures(signature_data[option], str(option))
         else:
             return "CONTROL: DONE!"
 
-def review_single_signature(signature_data, filename=True):
-    signature_keys = list(signature_data)
-    if len(signature_keys) == 0:
+def review_user_signatures(user_data, filename=True):
+    user_data = sorted(user_data, key=lambda x: int(x[0]))
+    if len(user_data) == 0:
         gui.msgbox(msg="No Signatures data to review!",
                     title="Notice")
         return
-    signature_keys = signature_keys[1::]
     option = None
     while True:
         choice_control = ["CONTROL: DONE!"]
-        choices = choice_control + signature_keys
-        option = gui.choicebox(msg="Signature ID: " + filename,
-                                title="Single Signature",
+        choices = choice_control + [sign_id[0] for sign_id in user_data]
+        option = gui.choicebox(msg="User ID: " + filename,
+                                title="Single User",
                                 choices=choices)
         if option == None:
             continue
         if "CONTROL:" not in option:
-            review_single_signature_data(signature_data[option], option )
+            review_single_signature_data(user_data[int(option)], option)
         else:
             return
     
-def review_single_signature_data(signature_data, real = 'real'):
+def review_single_signature_data(signature_data, sign_id = 'id'):
     option = None
+    signature_data = signature_data[1]
+    real = "Real" if int(sign_id) <= 20 else "Fake"
+    signature_data = sorted(signature_data, key=lambda x: x['timestamp'])
+    x_values = [point['x-coordinate'] for point in signature_data]
+    y_values = [point['y-coordinate'] for point in signature_data]
+    plot_signature(x_values, y_values)
     while True:
         choice_control = ["CONTROL: DONE!"]
         choices = choice_control + signature_data
-        option = gui.choicebox(msg="Data type: " + real,
+        option = gui.choicebox(msg="Signature ID: " + sign_id + "\nData type: " + real,
                                 title="Single Signature Data",
                                 choices=choices)
         if option == None:
@@ -120,6 +125,5 @@ def main():
         else:
             signatures[user_id] = [[sign_id, single_signature_data]]
     review_signatures(signatures)
-
 if __name__ == "__main__":
     main()

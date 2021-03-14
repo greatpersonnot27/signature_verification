@@ -1,3 +1,4 @@
 data_files/*
 dtw.code-workspace
 .vscode/*
+__pycache__/*
