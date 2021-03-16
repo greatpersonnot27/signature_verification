@@ -7,7 +7,9 @@ import datetime
 import ast
 import easygui as gui
 
-from plotter import plot_signature
+from plotter import plot_signature, plot_scatter_signature
+from DTWbasic import DTWbasic
+
 def parse_file(_file):
     encoding = get_file_encoding(_file)
     with open(_file, 'r', encoding=encoding) as infile:
@@ -91,6 +93,7 @@ def review_single_signature_data(signature_data, sign_id = 'id'):
     x_values = [point['x-coordinate'] for point in signature_data]
     y_values = [point['y-coordinate'] for point in signature_data]
     plot_signature(x_values, y_values)
+    plot_scatter_signature(x_values, y_values)
     while True:
         choice_control = ["CONTROL: DONE!"]
         choices = choice_control + signature_data
@@ -124,6 +127,12 @@ def main():
             signatures[user_id].append([sign_id, single_signature_data])
         else:
             signatures[user_id] = [[sign_id, single_signature_data]]
+    user_one_real = signatures['1'][0]
+    user_one_real_x_values = [int(point['x-coordinate']) for point in user_one_real[1]]
+    user_one_fake = signatures['1'][13]
+    user_one_fake_x_values = [int(point['x-coordinate']) for point in user_one_fake[1]]
+    #print(user_one_real_x_values, user_one_fake_x_values)
+    print(DTWbasic(user_one_real_x_values, user_one_fake_x_values))
     review_signatures(signatures)
 if __name__ == "__main__":
     main()
