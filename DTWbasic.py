@@ -1,6 +1,6 @@
 ## Basic Dynamic time warping implementation
 import numpy as np
-
+import math
 
 def DTWbasic(s, t):
     n, m = len(s), len(t)
@@ -13,10 +13,10 @@ def DTWbasic(s, t):
     
     for i in range(1, n+1):
         for j in range(1, m+1):
-            cost = abs(s[i-1] - t[j-1])
+            cost = math.dist(s[i-1], t[j-1])
             last_min = np.min([dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
             dtw_matrix[i, j] = cost + last_min
-    return dtw_matrix
+    return dtw_matrix[n,m]
 
 
 def DTWwindow(s, t, window):
@@ -39,6 +39,9 @@ def DTWwindow(s, t, window):
             last_min = np.min([dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
             dtw_matrix[i, j] = cost + last_min
     return dtw_matrix
+
+def distance_euclidean():
+    pass
 
 def main():
     pass

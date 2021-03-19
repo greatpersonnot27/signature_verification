@@ -1,5 +1,7 @@
 import numpy as np
 from collections import defaultdict
+
+
 def DTW(x, y, dist=None):
     return __DTW(x, y, None, dist)
 
@@ -9,7 +11,6 @@ def __DTW(x, y, window, dist):
     if window is None:
         window = [(i, j) for i in range(1, len_x - 1) for j in range(1, len_y - 1)]
     window = [(i + 1, j + 1) for i, j in window]
-    #print("window", len(window))
     D = defaultdict(lambda: (float('inf'),))
     D[1, 1] = (0, 0, 0)
     for i, j in window:
