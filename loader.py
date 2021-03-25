@@ -6,7 +6,7 @@ import csv
 import datetime
 import ast
 import easygui as gui
-import itertools
+
 
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
@@ -117,16 +117,6 @@ def get_user_signature_ids(filename):
         sign_id = id_checks.group(2)
     return user_id, sign_id
 
-def train_single_signature(real_signatures):
-    combs = list(itertools.combinations(real_signatures, 2))
-    diffs = []
-    for comb in combs:
-        s, t = comb
-        s = [[int(point['x-coordinate']),int(point['y-coordinate']), int(point['pressure'])] for point in s]
-        t = [[int(point['x-coordinate']),int(point['y-coordinate']), int(point['pressure'])] for point in t]
-        diffs.append(DTWbasic(s,t))
-    return sum(diffs)/ len(diffs)
-
 def main():
     data_folder = 'data_files'
     signatures = {}
@@ -138,15 +128,18 @@ def main():
             signatures[user_id].append([sign_id, single_signature_data])
         else:
             signatures[user_id] = [[sign_id, single_signature_data]]
-    signatures['1']
-    real_signatures = [signature[1] for signature in signatures['1'] if int(signature[0]) <= 10]
-    signature_th = train_single_signature(real_signatures)
-    # user_one_real = signatures['1'][0]
-    # user_one_real_x_values = [[int(point['x-coordinate']),int(point['y-coordinate']), int(point['pressure'])] for point in user_one_real[1]]
-    # user_one_fake = signatures['1'][13]
-    # user_one_fake_x_values = [[int(point['x-coordinate']),int(point['y-coordinate']), int(point['pressure'])] for point in user_one_fake[1]]
-    # #print(user_one_real_x_values, user_one_fake_x_values)
-    # print(DTWbasic(user_one_real_x_values, user_one_fake_x_values))
+    DTWlist = []
+    counter = 0
+    for key, signature_info in signatures.items():
+        dtwo = DTWbasic(key, signature_info)
+        threshhold = dtwo.get_threshhold()
+        DTWlist.append([threshhold, dtwo])
+        print(key)
+        r,f = dtwo.get_test_data_results(10,10)
+        if counter == 5:
+            break
+        counter += 1
+    print("DONE")
     # review_signatures(signatures)
     
 if __name__ == "__main__":
