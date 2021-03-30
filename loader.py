@@ -10,6 +10,7 @@ import easygui as gui
 
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
+from DDTWalgorithm import DTW, derivative_metric
 
 def parse_file(_file):
     encoding = get_file_encoding(_file)
@@ -117,30 +118,6 @@ def get_user_signature_ids(filename):
         sign_id = id_checks.group(2)
     return user_id, sign_id
 
-def main():
-    data_folder = 'data_files'
-    signatures = {}
-    for f in os.listdir('data_files'):
-        single_signature_data = parse_file(os.path.join(data_folder, f))
-        single_signature_data = clean_signature_data(single_signature_data)
-        user_id, sign_id = get_user_signature_ids(os.path.basename(f))
-        if signatures.get(user_id):
-            signatures[user_id].append([sign_id, single_signature_data])
-        else:
-            signatures[user_id] = [[sign_id, single_signature_data]]
-    DTWlist = []
-    counter = 0
-    for key, signature_info in signatures.items():
-        dtwo = DTWbasic(key, signature_info)
-        threshhold = dtwo.get_threshhold()
-        DTWlist.append([threshhold, dtwo])
-        print(key)
-        r,f = dtwo.get_test_data_results(10,10)
-        if counter == 5:
-            break
-        counter += 1
-    print("DONE")
-    # review_signatures(signatures)
     
 if __name__ == "__main__":
     main()
