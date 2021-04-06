@@ -7,10 +7,8 @@ import datetime
 import ast
 import easygui as gui
 
-
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
-from DDTWalgorithm import DTW, derivative_metric
 
 def parse_file(_file):
     encoding = get_file_encoding(_file)
@@ -118,6 +116,16 @@ def get_user_signature_ids(filename):
         sign_id = id_checks.group(2)
     return user_id, sign_id
 
-    
-if __name__ == "__main__":
-    main()
+def get_data(folder_name):
+    data_folder = folder_name
+    signatures = {}
+    for f in os.listdir(data_folder):
+        single_signature_data = parse_file(os.path.join(data_folder, f))
+        single_signature_data = clean_signature_data(single_signature_data)
+        user_id, sign_id = get_user_signature_ids(os.path.basename(f))
+        if signatures.get(user_id):
+            signatures[user_id].append([sign_id, single_signature_data])
+        else:
+            signatures[user_id] = [[sign_id, single_signature_data]]
+    return signatures
+

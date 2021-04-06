@@ -2,6 +2,7 @@
 import numpy as np
 import math
 import itertools
+import statistics
 
 class DTWbasic():
     def __init__(self, user_id, signatures):
@@ -61,7 +62,7 @@ class DTWbasic():
             t = [[int(point['x-coordinate']),int(point['y-coordinate']), int(point['pressure'])] for point in t]
             diffs.append(self.get_DTWbasic(s,t))
         self.threshhold = sum(diffs)/ len(diffs)
-        return self.threshhold
+        return self.threshhold, statistics.stdev([int(x) for x in diffs])
 
 
     def get_test_data_results(self, num_real = None, num_fake = None):
@@ -73,7 +74,7 @@ class DTWbasic():
         if num_fake != None:
             fake_data = fake_data[:num_fake]
         for test_signature in real_data:
-            test_key = test_signature[0]
+            #test_key = test_signature[0]
             test_values = test_signature[1]
             test_diffs = []
             for real_signature in self.training_data:
@@ -83,7 +84,7 @@ class DTWbasic():
             test_ave_th = sum(test_diffs)/ len(test_diffs)
             real_results.append(test_ave_th)
         for test_signature in fake_data:
-            test_key = test_signature[0]
+            #test_key = test_signature[0]
             test_values = test_signature[1]
             test_diffs = []
             for real_signature in self.training_data:
