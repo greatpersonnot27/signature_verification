@@ -1,4 +1,3 @@
-## Basic Dynamic time warping implementation
 import numpy as np
 import math
 import itertools
