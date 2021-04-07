@@ -6,24 +6,28 @@ from DTWbasic import DTWbasic
 from DDTWalgorithm import DDTWalgorithm
 from DTWlibs import DTWlibs
 
-def main():
-    signatures = get_data('data_files')
+
+def classify_signatures(signatures, classifier_type, features):
     DTWlist = []
     counter = 0
-    for key, signature_info in signatures.items():
-        #dtwo = DTWbasic(key, signature_info)
-        #dtwo = DDTWalgorithm(key, signature_info)
-        dtwo = DTWlibs(key, signature_info)
-        # Maybe I need a higher threshhold ??? average distance + standard deviation 
+    sorted_signatures = sorted(signatures.items(), key=lambda x: int(x[0]))
+    for key, signature_info in sorted_signatures:
+        dtwo = None
+        if classifier_type == "Basic DTW":
+            dtwo = DTWbasic(key, signature_info, features)
+        if classifier_type == "Derivative DTW":
+            dtwo = DDTWalgorithm(key, signature_info, features)
+        if classifier_type == "Library DTW":
+            dtwo = DTWlibs(key, signature_info, features)
+        print("\nWorking on User: " + str(key))
         threshhold, stddev = dtwo.get_threshhold()
-        print(key)
         print("threshold: " + str(threshhold) + " std dev: " + str(stddev))
         gen,forg = dtwo.get_test_data_results()
         gen_len = len(gen)
         forg_len = len(forg)
         false_r = 0
         false_a = 0
-        # TODO missing equality sign
+
         for th in gen:
             print("GENUINE test_th: " + str(th) + " threshhold: " + str(threshhold))
             if int(th) >= int(threshhold) + int(stddev):
@@ -44,7 +48,12 @@ def main():
     results_false_a = [int(x[2]) for x in DTWlist]
     print("False acceptance rate for whole dataset: " + str(sum(results_false_a)/len(results_false_a)))
     print("DONE")
-    # review_signatures(signatures)
-    
+
+def main():
+    signatures = get_data('data_files')
+    # available features - 'x-coordinate', 'y-coordinate', 'timestamp', 'buttonstatus', 'azimuth', 'altitude', 'pressure'
+    features = ['y-coordinate', 'pressure']
+    classify_signatures(signatures, "Library DTW", features)
+     
 if __name__ == "__main__":
     main()

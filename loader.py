@@ -25,14 +25,12 @@ def parse_file(_file):
                 signature_data.append(row)
     return signature_data
 
-
 def get_file_encoding(_file):
     with open(_file, 'rb') as f:
         enc = chardet.detect(f.read())
         if enc['confidence'] < 0.55:
             print("WARNING: Encoding might fail on: {}".format(_file))
         return enc['encoding']
-
 
 def select_source():
     files = None
