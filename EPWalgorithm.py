@@ -22,9 +22,9 @@ class EPWalgorithm(DTWbase):
             for j in range(1, m+1):
                 cost = self.cityblock_distance(s[i-1], t[j-1])
                 dtw_matrix[i, j] = np.min(
-                    [dtw_matrix[i-1, j - 3] + cost + ps * self.cityblock_distance(dtw_matrix[j - 2, j - 1]),
+                    [dtw_matrix[i-1, j - 3] + cost + ps * self.cityblock_distance(j - 2, j - 1),
                     dtw_matrix[i - 1, j-1] + cost/2,
-                    dtw_matrix[i-3, j-1] + cost + ps * self.cityblock_distance(dtw_matrix[i - 2, i - 1])])
+                    dtw_matrix[i-3, j-1] + cost + ps * self.cityblock_distance(i - 2, i - 1)])
         return dtw_matrix[n, m]
 
     def cityblock_distance(self, s, t):

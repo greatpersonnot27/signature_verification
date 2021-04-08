@@ -19,6 +19,9 @@ class DTWbase():
 
     def get_DTW(self, s, t):
         pass
+    
+    def get_DTW_path(self, dtw_matrix):
+        pass
 
     def get_DTW_window(self, s, t, window):
         pass

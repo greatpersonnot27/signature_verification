@@ -3,7 +3,7 @@ import math
 import itertools
 import statistics
 from DTWbase import DTWbase
-from dtw import dtw
+from dtw import *
 
 class DTWlibs(DTWbase):
     def get_DTW(self, s, t):
