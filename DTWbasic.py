@@ -6,6 +6,7 @@ import statistics
 
 from DTWbase import DTWbase
 
+
 class DTWbasic(DTWbase):
 
     def get_DTW(self, s, t):
@@ -20,10 +21,32 @@ class DTWbasic(DTWbase):
         for i in range(1, n+1):
             for j in range(1, m+1):
                 cost = math.dist(s[i-1], t[j-1])
-                last_min = np.min(
+                last_min = min(
                     [dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
                 dtw_matrix[i, j] = cost + last_min
-        return dtw_matrix[n, m]
+        #self.get_DTW_path(dtw_matrix)
+        return dtw_matrix[n, m]/(n+m)
+
+    def get_DTW_path(self, dtw_matrix):
+        n, m = dtw_matrix.shape
+        n -= 1
+        m -= 1
+        path = []
+        while n != 0 and  m != 0:
+            path.append((n, m))
+            prev_val = min(
+                [dtw_matrix[n-1, m], dtw_matrix[n, m-1], dtw_matrix[n-1, m-1]])
+            if prev_val == dtw_matrix[n-1, m]:
+                path.append((n - 1, m))
+                n -= 1
+            elif prev_val == dtw_matrix[n, m-1]:
+                path.append((n, m-1))
+                m -= 1
+            else:
+                path.append((n-1, m-1))
+                n -= 1
+                m -= 1
+        return path
 
     def get_DTW_window(self, s, t, window):
         n, m = len(s), len(t)
@@ -45,4 +68,4 @@ class DTWbasic(DTWbase):
                 last_min = np.min(
                     [dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
                 dtw_matrix[i, j] = cost + last_min
-        return dtw_matrix
+        return dtw_matrix[n, m]
