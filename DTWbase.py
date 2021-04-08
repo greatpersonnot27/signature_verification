@@ -8,9 +8,9 @@ class DTWbase():
     def __init__(self, user_id, signatures, features):
         self.signatures = signatures
         self.training_data = [[[int(point[feature]) for feature in features]
-                               for point in signature[1]] for signature in signatures if int(signature[0]) <= 10]
+                               for point in signature[1]] for signature in signatures if int(signature[0]) <= 13]
         self.test_data_genuine = [[[int(point[feature]) for feature in features]
-                                   for point in signature[1]] for signature in signatures if int(signature[0]) > 10 and int(signature[0]) < 21]
+                                   for point in signature[1]] for signature in signatures if int(signature[0]) > 13 and int(signature[0]) < 21]
         self.test_data_forgerie = [[[int(point[feature]) for feature in features]
                                     for point in signature[1]] for signature in signatures if int(signature[0]) > 20]
         self.user_id = user_id

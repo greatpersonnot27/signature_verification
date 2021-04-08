@@ -39,7 +39,7 @@ class DDTWalgorithm(DTWbase):
         elif index == len(x) - 1:
             print("e")
             return 0
-        return ((x[index] - x[index - 1]) + ((x[index + 1] - x[index - 1])/2))/2
+        return ((x[index][0] - x[index - 1][0]) + ((x[index + 1][0] - x[index - 1][0])/2))/2
 
     def derivative_metric(self, x, y, x_index, y_index):
         if x_index == 0 or y_index == 0:

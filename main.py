@@ -1,11 +1,12 @@
 import os
-
+import ast
 from loader import get_data
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
 from DDTWalgorithm import DDTWalgorithm
 from DTWlibs import DTWlibs
-
+from EPWalgorithm import EPWalgorithm
+import easygui as gui
 
 def classify_signatures(signatures, classifier_type, features):
     DTWlist = []
@@ -19,6 +20,8 @@ def classify_signatures(signatures, classifier_type, features):
             dtwo = DDTWalgorithm(key, signature_info, features)
         if classifier_type == "Library DTW":
             dtwo = DTWlibs(key, signature_info, features)
+        if classifier_type == "Extreme Point DTW":
+            dtwo = EPWalgorithm(key, signature_info, features)
         print("\nWorking on User: " + str(key))
         threshhold, stddev = dtwo.get_threshhold()
         print("threshold: " + str(threshhold) + " std dev: " + str(stddev))
@@ -27,19 +30,20 @@ def classify_signatures(signatures, classifier_type, features):
         forg_len = len(forg)
         false_r = 0
         false_a = 0
-
+        print("-Genuine-")
         for th in gen:
-            print("GENUINE test_th: " + str(th) + " threshhold: " + str(threshhold))
+            print("Tested Signature: " + str(th) + " threshhold: " + str(threshhold))
             if int(th) >= int(threshhold) + int(stddev):
                 false_r += 1
+        print("-Forgeries-")
         for th in forg:
-            print("FORGERY test_th: " + str(th) + " threshhold: " + str(threshhold))
-            if int(th) < int(threshhold) - int(stddev):
+            print("Tested Signature: " + str(th) + " threshhold: " + str(threshhold))
+            if int(th) < int(threshhold) + int(stddev):
                 false_a += 1
         print("false reject: " + str(false_r))
         print("false accepted: " + str(false_a))
         DTWlist.append([threshhold, false_r/gen_len, false_a/forg_len])
-        if counter == 100:
+        if counter == 8:
             break
         counter += 1
     print(DTWlist)
@@ -52,8 +56,11 @@ def classify_signatures(signatures, classifier_type, features):
 def main():
     signatures = get_data('data_files')
     # available features - 'x-coordinate', 'y-coordinate', 'timestamp', 'buttonstatus', 'azimuth', 'altitude', 'pressure'
-    features = ['y-coordinate', 'pressure']
-    classify_signatures(signatures, "Library DTW", features)
-     
+    feature_sets = [['y-coordinate'], ['y-coordinate', 'x-coordinate'],['y-coordinate', 'pressure'], ['y-coordinate', 'x-coordinate', 'pressure']]
+    features = gui.choicebox(msg="Choose Features", title="Features", choices=feature_sets)
+    features = ast.literal_eval(features)
+    dtw_types = ["Basic DTW","Derivative DTW", "Library DTW", "Extreme Point DTW"]
+    dtw_type = gui.choicebox(msg="Choose Features", title="Features", choices=dtw_types)
+    classify_signatures(signatures, dtw_type, features)
 if __name__ == "__main__":
     main()
