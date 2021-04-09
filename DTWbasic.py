@@ -25,7 +25,7 @@ class DTWbasic(DTWbase):
                     [dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
                 dtw_matrix[i, j] = cost + last_min
         #self.get_DTW_path(dtw_matrix)
-        return dtw_matrix[n, m]/(n+m)
+        return dtw_matrix[n, m]
 
     def get_DTW_path(self, dtw_matrix):
         n, m = dtw_matrix.shape
