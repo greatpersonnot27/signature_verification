@@ -44,7 +44,7 @@ def classify_signatures(signatures, classifier_type, features):
         print("false reject: " + str(false_r))
         print("false accepted: " + str(false_a))
         DTWlist.append([threshhold, false_r/gen_len, false_a/forg_len])
-        if counter == 100:
+        if counter == 1000:
             break
         counter += 1
     print(DTWlist)

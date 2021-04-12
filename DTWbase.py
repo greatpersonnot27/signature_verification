@@ -3,7 +3,6 @@ import math
 import itertools
 import statistics
 
-
 class DTWbase():
     def __init__(self, user_id, signatures, features):
         self.signatures = signatures
