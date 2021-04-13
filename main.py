@@ -30,7 +30,7 @@ def classify_signatures(signatures, classifier_type, features):
         forg_len = len(forg)
         false_r = 0
         false_a = 0
-        threshhold = threshhold + stddev
+        threshhold = threshhold
         print("-Genuine-")
         for th in gen:
             print("Tested Signature: " + str(th) + " threshhold_real: " + str(threshhold))
