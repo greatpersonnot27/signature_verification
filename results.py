@@ -1,28 +1,22 @@
 import json
-
+import easygui as gui
+from datetime import date
 
 def save_results(results, features, classifier_name):
-    bank_dictionary = {'bookings': processors['bank'].get_bookings(
-    ), 'source_files': processors['bank'].source_files}
-    twint_dictionary = {'bookings': processors['twint'].get_bookings(
-    ), 'fee_bookings': processors['twint'].fee_bookings, 'source_files': processors['twint'].source_files}
-    payrex_dictionary = {'bookings': processors['payrexx'].get_bookings(
-    ), 'fee_bookings': processors['payrexx'].fee_bookings, 'source_files': processors['payrexx'].source_files}
-    paypal_dictionary = {'bookings': processors['paypal'].get_bookings(), 'fee_bookings': processors['paypal'].fee_bookings,
-                         'source_files': processors['paypal'].source_files, 'conversion_bookings': processors['paypal'].conversion_bookings}
-    with open("saved_state/saved_state.txt", "w") as fl:
-        json.dump({"bank_dict": bank_dictionary, "twint_dict": twint_dictionary, "payrex_dict": payrex_dictionary,
-                   "paypal_dict": paypal_dictionary, "source_files": source_files}, fl, indent=4)
+    filename = "default.txt"
+    filename = gui.enterbox(msg="Enter filename", title="Save Dialog", default="default.txt", strip=True)
+    today = date.today()
+    with open("saved_results/"+ filename, "w") as fl:
+        json.dump({"Date": str(today), "Classifier Type": classifier_name, "features": features, "RESULTS": results}, fl, indent=4)
 
 def load_results(name):
-    bank_dictionary = {'bookings': processors['bank'].get_bookings(
-    ), 'source_files': processors['bank'].source_files}
-    twint_dictionary = {'bookings': processors['twint'].get_bookings(
-    ), 'fee_bookings': processors['twint'].fee_bookings, 'source_files': processors['twint'].source_files}
-    payrex_dictionary = {'bookings': processors['payrexx'].get_bookings(
-    ), 'fee_bookings': processors['payrexx'].fee_bookings, 'source_files': processors['payrexx'].source_files}
-    paypal_dictionary = {'bookings': processors['paypal'].get_bookings(), 'fee_bookings': processors['paypal'].fee_bookings,
-                         'source_files': processors['paypal'].source_files, 'conversion_bookings': processors['paypal'].conversion_bookings}
-    with open("saved_state/saved_state.txt", "w") as fl:
-        json.dump({"bank_dict": bank_dictionary, "twint_dict": twint_dictionary, "payrex_dict": payrex_dictionary,
-                   "paypal_dict": paypal_dictionary, "source_files": source_files}, fl, indent=4)
+    try:
+        filename = "default.txt"
+        filename = gui.enterbox(msg="Enter filename", title="Load Dialog", default="default.txt", strip=True)
+        with open("saved_results/" + filename, "r") as fl:
+            loaded_dictionary = json.load(fl)
+
+        return loaded_dictionary["bank_dict"], loaded_dictionary["twint_dict"], loaded_dictionary["payrex_dict"], loaded_dictionary["paypal_dict"], loaded_dictionary["source_files"]
+    except Exception as e:
+        print("Load State(): " + str(e))
+        return None
