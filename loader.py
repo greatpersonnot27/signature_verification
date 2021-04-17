@@ -22,7 +22,12 @@ def parse_file(_file):
                 first_row = False
                 #signature_data['number_fo_points'] = row['x-coordinate']
             else:
-                signature_data.append(row)
+                if row['pressure'] == 0:
+                    print("he")
+                if row['pressure'] == '0':
+                    pass
+                else:
+                    signature_data.append(row)
     return signature_data
 
 def get_file_encoding(_file):

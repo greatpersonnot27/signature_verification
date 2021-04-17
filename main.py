@@ -6,6 +6,7 @@ from DTWbasic import DTWbasic
 from DDTWalgorithm import DDTWalgorithm
 from DTWlibs import DTWlibs
 from EPWalgorithm import EPWalgorithm
+from DDTWalgorithmMTS import DDTWalgorithmMTS
 from results import save_results
 import easygui as gui
 
@@ -24,6 +25,8 @@ def classify_signatures(signatures, classifier_type, features):
             dtwo = DTWlibs(key, signature_info, features)
         if classifier_type == "Extreme Point DTW":
             dtwo = EPWalgorithm(key, signature_info, features)
+        if classifier_type == "MTS Derivative DTW":
+            dtwo = DDTWalgorithmMTS(key, signature_info, features)
         print("\nWorking on User: " + str(key))
         threshhold, stddev = dtwo.get_threshhold()
         print("threshold: " + str(threshhold) + " std dev: " + str(stddev))
@@ -73,8 +76,8 @@ def main():
     feature_sets = [['y-coordinate'], ['y-coordinate', 'x-coordinate'],['y-coordinate', 'pressure'], ['y-coordinate', 'x-coordinate', 'pressure']]
     features = gui.choicebox(msg="Choose Features", title="Features", choices=feature_sets)
     features = ast.literal_eval(features)
-    dtw_types = ["Basic DTW","Derivative DTW", "Library DTW", "Extreme Point DTW"]
-    dtw_type = gui.choicebox(msg="Choose Features", title="Features", choices=dtw_types)
+    dtw_types = ["Basic DTW","Derivative DTW", "Library DTW", "Extreme Point DTW", "MTS Derivative DTW"]
+    dtw_type = gui.choicebox(msg="Choose DTW type:\n Chosen features " + str(features) , title="Types", choices=dtw_types)
     classify_signatures(signatures, dtw_type, features)
 if __name__ == "__main__":
     main()
