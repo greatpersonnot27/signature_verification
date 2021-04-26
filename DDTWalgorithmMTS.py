@@ -30,8 +30,8 @@ class DDTWalgorithmMTS(DTWbase):
 
         for i in range(1, n+1):
             for j in range(1, m+1):
-                #cost = math.dist(s[i-1], t[j-1])
-                cost = self.cityblock_distance(s[i-1], t[j-1])
+                cost = math.dist(s[i-1], t[j-1])
+                #cost = self.cityblock_distance(s[i-1], t[j-1])
                 last_min = min(
                     [dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
                 dtw_matrix[i, j] = cost + last_min
