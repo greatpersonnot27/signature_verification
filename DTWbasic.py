@@ -9,16 +9,6 @@ from scipy import stats
 
 class DTWbasic(DTWbase):
     def get_DTW(self, s, t):
-        sx = [p[0] for p in s]
-        sy = [p[1] for p in s]
-        normalized_sx = stats.zscore(sx)
-        nomralized_sy = stats.zscore(sy)
-        s = [list(mem) for mem in zip(normalized_sx, nomralized_sy)]
-        tx = [p[0] for p in t]
-        ty = [p[1] for p in t]
-        normalized_tx = stats.zscore(tx)
-        nomralized_ty = stats.zscore(ty)
-        t = [list(mem) for mem in zip(normalized_tx, nomralized_ty)]
         n, m = len(s), len(t)
         dtw_matrix = np.zeros((n+1, m+1))
         for i in range(n+1):

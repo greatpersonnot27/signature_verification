@@ -12,9 +12,9 @@ from tkinter import *
 from tkinter.ttk import *
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
+from LoaderBase import LoaderBase
 
-
-class Loader():
+class LoaderSigComp(LoaderBase):
     def __init__(self, folder_name):
         self.signatures = {}
         self.folder_name = folder_name

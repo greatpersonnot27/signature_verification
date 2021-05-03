@@ -2,7 +2,7 @@ import os
 import ast
 import time
 
-from Loader import Loader
+from LoaderSVC2004 import LoaderSVC2004
 from plotter import plot_signature, plot_scatter_signature
 from DTWbasic import DTWbasic
 from DDTWalgorithm import DDTWalgorithm
@@ -13,6 +13,7 @@ from results import save_results
 from tkinter import *
 from tkinter.ttk import *
 import easygui as gui
+from scipy import stats
 
 
 def classify_signatures(signatures, classifier_type, features):
@@ -85,12 +86,36 @@ def classify_signatures(signatures, classifier_type, features):
     print("DONE")
 
 
+def normalize_data(signatures):
+    for user, user_signatures in signatures.items():
+        for index, signature in enumerate(user_signatures):
+            signature_x = [int(x['x-coordinate']) for x in signature[1]]
+            signature_y = [int(x['y-coordinate']) for x in signature[1]]
+            signature_az = [int(x['azimuth']) for x in signature[1]]
+            signature_alt = [int(x['altitude']) for x in signature[1]]
+            signature_pr = [int(x['pressure']) for x in signature[1]]
+            normalized_x = stats.zscore(signature_x)
+            normalized_y = stats.zscore(signature_y)
+            normalized_pr = stats.zscore(signature_pr)
+            normalized_az = stats.zscore(signature_az)
+            normalized_alt = stats.zscore(signature_alt)
+            signature_normalized = [{'x-coordinate': c[0], 'y-coordinate': c[1], 'azimuth': c[2], 'altitude': c[3],
+                                     'pressure': c[4]} for c in zip(normalized_x, normalized_y, normalized_pr, normalized_az, normalized_alt)]
+            user_signatures[index] = [signature[0], signature_normalized]
+    return signatures
+
+
 def main():
-    loader = Loader('data_files')
+    loader = LoaderSVC2004('data_files', [
+                           'x-coordinate', 'y-coordinate', 'timestamp', 'buttonstatus', 'azimuth', 'altitude', 'pressure'])
     signatures = loader.get_data()
+    t1 = time.perf_counter()
+    signatures = normalize_data(signatures)
+    t2 = time.perf_counter()
+    print(t2 - t1)
     # available features - 'x-coordinate', 'y-coordinate', 'timestamp', 'buttonstatus', 'azimuth', 'altitude', 'pressure'
     feature_sets = [['y-coordinate'], ['y-coordinate', 'x-coordinate'],
-                    ['y-coordinate', 'pressure'], ['y-coordinate', 'x-coordinate', 'pressure']]
+                    ['y-coordinate', 'pressure'], ['y-coordinate', 'x-coordinate', 'pressure'], ['y-coordinate', 'x-coordinate', 'pressure', 'azimuth', 'altitude']]
     features = gui.choicebox(msg="Choose Features",
                              title="Features", choices=feature_sets)
     features = ast.literal_eval(features)
@@ -103,6 +128,7 @@ def main():
 
 def start():
     pass
+
 
 if __name__ == "__main__":
     main()
