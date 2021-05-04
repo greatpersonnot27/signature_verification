@@ -49,7 +49,8 @@ class DTWbase():
             test_diffs = []
             for genuine_signature in self.training_data:
                 test_diffs.append(self.get_DTW(
-                    genuine_signature, test_signature))
+                    test_signature, genuine_signature))
+                    # genuine_signature, test_signature))
             test_ave_th = sum(test_diffs) / len(test_diffs)
             genuine_results.append(test_ave_th)
 
@@ -57,7 +58,8 @@ class DTWbase():
             test_diffs = []
             for genuine_signature in self.training_data:
                 test_diffs.append(self.get_DTW(
-                    genuine_signature, test_signature))
+                    test_signature, genuine_signature))
+                    # genuine_signature, test_signature))
             test_ave_th = sum(test_diffs) / len(test_diffs)
             forgery_results.append(test_ave_th)
         return genuine_results, forgery_results

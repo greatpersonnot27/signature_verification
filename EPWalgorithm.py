@@ -10,16 +10,6 @@ class EPWalgorithm(DTWbase):
     def get_DTW(self, s, t):
         s = self.extreme_points(s)
         t = self.extreme_points(t)
-        # sx = [p[0] for p in s]
-        # # sy = [p[1] for p in s]
-        # normalized_sx = stats.zscore(sx)
-        # # nomralized_sy = stats.zscore(sy)
-        # s = [[mem] for mem in normalized_sx]
-        # tx = [p[0] for p in t]
-        # #ty = [p[1] for p in t]
-        # normalized_tx = stats.zscore(tx)
-        # #nomralized_ty = stats.zscore(ty)
-        # t = [[mem] for mem in normalized_tx]
         n, m = len(s), len(t)
         ps = 2
         dtw_matrix = np.zeros((n+1, m+1))
